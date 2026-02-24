@@ -1,9 +1,9 @@
+remotes::install_github("tdhock/mlr3learners@cv_glmnet_seed")
 library(data.table)
 options(timeout=9999)
 if(!file.exists("data_Classif.zip")){
   download.file("https://zenodo.org/records/18273949/files/SOAK_data_Classif.zip?download=1", "data_Classif.zip")
 }
-
 
 set.seed(1)
 SOAK <- mlr3resampling::ResamplingSameOtherSizesCV$new()
