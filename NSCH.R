@@ -34,8 +34,11 @@ for(task_id in "NSCH_autism"){
 scratch.dir <- "scratch"
 dir.create(scratch.dir, showWarnings=FALSE)
 
+set.seed(1)
+SOAK$instantiate(task.obj)
+
 (class.learner.list <- list(
-  mlr3resampling::LearnerClassifCVGlmnetSave$new())
+  mlr3resampling::LearnerClassifCVGlmnetSave$new()))
 for(learner.i in seq_along(class.learner.list)){
   class.learner.list[[learner.i]]$predict_type <- "prob"
 }

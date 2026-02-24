@@ -13,8 +13,8 @@ mlr3resampling::proj_test(proj.dir)
 
 mlr3resampling::proj_submit(
   proj.dir,
-  tasks=100,
-  hours=12,
-  gigabytes=3)#jid 7290208 on rorqual
+  tasks=20,
+  hours=6,
+  gigabytes=3)#jid 7302689
 mlr3resampling::proj_results(proj.dir)
 mlr3resampling::proj_todo(proj.dir)

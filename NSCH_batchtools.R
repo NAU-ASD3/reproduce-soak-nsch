@@ -20,7 +20,7 @@ batchtools::submitJobs(chunks, resources=list(
   ncpus=1,  #>1 for multicore/parallel jobs.
   ntasks=1, #>1 for MPI jobs.
   chunks.as.arrayjobs=TRUE), reg=reg)
-## rorqual 7290254
+## rorqual 7302694
 reg <- batchtools::loadRegistry(reg.dir)
 bmr = mlr3batchmark::reduceResultsBatchmark(
   reg = reg, store_backends = FALSE)
