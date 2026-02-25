@@ -41,7 +41,7 @@ test_dt <- compare_long[, {
 gg <- ggplot()+
   theme_bw()+
   theme(panel.spacing.x=grid::unit(2, "lines"))+
-  test_dt[, ggtitle(sprintf("No significant differences between Computation methods\n(different random initializations, fixed train/test splits)\nP-value range: %.2f–%.2f", min(p.value), max(p.value)))]+
+  test_dt[, ggtitle(sprintf("No significant differences between Computation methods\n(fixed train/test splits, different random subtrain/validation splits)\nP-value range: %.2f–%.2f", min(p.value), max(p.value)))]+
   geom_point(aes(
     AUC_mean, Computation),
     data=compare_stats)+
@@ -66,6 +66,3 @@ png(
   width=8, height=4, units="in", res=200)
 print(gg)
 dev.off()
-
-
-
