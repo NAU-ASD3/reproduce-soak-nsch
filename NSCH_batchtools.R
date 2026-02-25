@@ -33,10 +33,12 @@ file.copy(
   out.csv,
   file.path("results", "2026-02-24", "NSCH_batchtools.csv"))
 
+(job.table <- batchtools::getJobTable(reg=reg))
 job.table[, learner_id := sapply(algo.pars, "[[", "learner_id")]
 job.csv <- paste0(reg.dir, "_jobs.csv")
 fwrite(job.table[, .SD, .SDcols=is.atomic], job.csv)
 file.copy(
   job.csv,
-  file.path("results", "2026-02-24", "NSCH_batchtools_jobs.csv"))
+  file.path("results", "2026-02-24", "NSCH_batchtools_jobs.csv"),
+  overwrite = TRUE)
 
