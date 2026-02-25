@@ -8,7 +8,7 @@ compare_dt <- nc::capture_first_glob(
     learner_id, train.subsets, test.subset, test.fold,
     AUC=classif.auc, accuracy=classif.acc)])
 
-ucomp <- unique(compare_dt$computation)
+ucomp <- sort(unique(compare_dt$computation))
 yfac <- function(x)factor(x, c(
   ##"",
   ucomp))
