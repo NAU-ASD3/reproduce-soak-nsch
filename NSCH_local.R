@@ -2,3 +2,6 @@ source("NSCH_proj.R")
 future::plan("multisession")
 mlr3resampling::proj_compute_all(proj.dir, verbose=TRUE)
 
+file.copy(
+  file.path(proj.dir, "results.csv"),
+  file.path("results", "2026-02-24", "NSCH_local.csv"))

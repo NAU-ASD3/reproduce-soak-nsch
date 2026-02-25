@@ -1,61 +1,62 @@
 library(data.table)
 library(ggplot2)
-proj_dt <- fread("NSCH_mpi.csv")
-##seq_dt <- fread("NSCH_autism_reproduce_proj_results_sequential.csv")
-reg_dt <- fread("NSCH_batchtools.csv")
+compare_dt <- nc::capture_first_glob(
+  "*.csv",
+  "NSCH_",
+  computation="[^.]+",
+  READ=function(f)fread(f)[, .(
+    learner_id, train.subsets, test.subset, test.fold,
+    AUC=classif.auc, accuracy=classif.acc)])
 
-compare_dt <- rbind(
-  proj_dt[, .(fun="compute_all_mpi", learner_id, train.subsets, test.subset, test.fold, classif.auc)],
-  ##seq_dt[, .(fun="compute_all", learner_id, train.subsets, test.subset, test.fold, classif.auc)],
-  reg_dt[, .(fun="reduceResultsBatchmark", learner_id, train.subsets, test.subset, test.fold, classif.auc)])
+ucomp <- unique(compare_dt$computation)
 yfac <- function(x)factor(x, c(
-  unique(compare_dt$fun),
   ##"",
-  NULL))
+  ucomp))
 compare_dt[, let(
-  AUC = classif.auc,
-  Fun = yfac(fun),
+  Computation = yfac(computation),
   train=train.subsets,
   test=test.subset
 )][]
 compare_stats <- dcast(
   compare_dt,
-  Fun+train+test~.,
+  Computation+train+test~.,
   list(mean,sd,length),
   value.var="AUC")
 
-compare_wide <- dcast(compare_dt, train+test+test.fold~fun, value.var="AUC")
-compare_long <- nc::capture_melt_single(
+compare_wide <- dcast(
+  compare_dt,
+  train+test+test.fold~computation,
+  value.var=c("AUC", "accuracy"))
+compare_long <- melt(
   compare_wide,
-  nc::field("compute", "_", ".+"),
-  value.name = "compute_AUC"
-)[
-, ref_AUC := reduceResultsBatchmark
-][]
+  measure.vars=paste0("AUC_", ucomp[-1]),
+  value.name = "AUC_compare",
+  variable.name="compare")
 test_dt <- compare_long[, {
-  tlist <- t.test(ref_AUC, compute_AUC, paired=TRUE)
+  AUC_ref <- .SD[[paste0("AUC_", ucomp[1])]]
+  tlist <- t.test(AUC_compare, AUC_ref, paired=TRUE)
   with(tlist, data.table(p.value, N=.N))
-}, by=.(train, test, compute)]
+}, by=.(train, test, compare)]
 
 gg <- ggplot()+
   theme_bw()+
   theme(panel.spacing.x=grid::unit(2, "lines"))+
-  test_dt[, ggtitle(sprintf("No significant differences\nbetween results computed using different random initializations\nP-value range: %.2f–%.2f", min(p.value), max(p.value)))]+
+  test_dt[, ggtitle(sprintf("No significant differences between Computation methods\n(different random initializations, fixed train/test splits)\nP-value range: %.2f–%.2f", min(p.value), max(p.value)))]+
   geom_point(aes(
-    AUC_mean, Fun),
+    AUC_mean, Computation),
     data=compare_stats)+
   geom_text(aes(
-    AUC_mean, Fun, label=sprintf(
+    AUC_mean, Computation, label=sprintf(
       "%.4f±%.4f", AUC_mean, AUC_sd)),
     vjust=-0.5,
     size=3,
     data=compare_stats)+
   geom_segment(aes(
-    AUC_mean+AUC_sd, Fun,
-    xend=AUC_mean-AUC_sd, yend=Fun),
+    AUC_mean+AUC_sd, Computation,
+    xend=AUC_mean-AUC_sd, yend=Computation),
     data=compare_stats)+
   scale_y_discrete(
-    "Function",
+    "Computation",
     drop=FALSE)+
   scale_x_continuous(
     "cv_glmnet performance on test subset (mean±SD over 10 folds in CV)")+
