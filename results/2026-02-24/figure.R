@@ -59,7 +59,7 @@ gg <- ggplot()+
     "Computation",
     drop=FALSE)+
   scale_x_continuous(
-    "cv_glmnet performance on test subset (mean±SD over 10 folds in CV)")+
+    "Area Under the Curve (AUC) for cv_glmnet predictions on test subset (mean±SD over 10 folds in CV)")+
   facet_grid(train~test, scales="free", labeller=label_both)
 png(
   "figure.png",
