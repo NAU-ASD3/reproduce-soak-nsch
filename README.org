@@ -1,1 +1,31 @@
 Code for reproducing SOAK paper results for NSCH data
+
+** Context
+
+National Survey of Public Health (NSCH) data from 2019 and 2020 were
+used as one of the 20 data sets in the paper, [[https://onlinelibrary.wiley.com/doi/10.1002/sam.70055][Bodine, Thibault,
+Arellano, Shenkin, Lindly, Hocking. SOAK: Same/Other/All K-fold
+cross-validation for estimating similarity of patterns in data
+subsets. Statistical Analysis and Data Mining 19(1), 2026]].
+
+The raw data were converted to a form suitable for machine learning:
+CSV with one row per person who responded to the survey, one column
+per categorical response variable.
+These data are available on [[https://zenodo.org/records/18273949][zenodo]].
+The autism diagnosis column was
+used as the output/response to predict, and the other columns were
+used as the inputs to the prediction function.
+Figure 4 and 5 show results computed using these data.
+
+** Reproducing
+
+The original result CSV files used to compute Figures 4 and 5, and
+reproducibility instructions, are available in the [[https://github.com/tdhock/cv-same-other-paper?tab=readme-ov-file#reproducibility][GitHub repository associated with the paper]].
+
+This repo provides code for three different ways of reproducing these results.
+
+TODO
+
+** Slides
+
+[[https://docs.google.com/presentation/d/1EVu7YMCO4tvK3RhkUp1dfFABspn410X9bz2DBznsO-g/edit?usp=sharing][Google slides summarizing results]].
