@@ -29,6 +29,14 @@ save(bmr, file=out.RData)
 score_dt <- mlr3resampling::score(bmr, mlr3::msrs(c("classif.auc", "classif.acc")))
 out.csv <- paste0(reg.dir, "_scores.csv")
 fwrite(score_dt[, .SD, .SDcols=is.atomic], out.csv)
+file.copy(
+  out.csv,
+  file.path("results", "2026-02-24", "NSCH_batchtools.csv"))
+
 job.table[, learner_id := sapply(algo.pars, "[[", "learner_id")]
 job.csv <- paste0(reg.dir, "_jobs.csv")
 fwrite(job.table[, .SD, .SDcols=is.atomic], job.csv)
+file.copy(
+  job.csv,
+  file.path("results", "2026-02-24", "NSCH_batchtools_jobs.csv"))
+
