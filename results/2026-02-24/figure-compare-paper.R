@@ -7,6 +7,52 @@ orig_dt <- fread("data_Classif_batchmark_registry.csv")[
   task_id=="NSCH_autism" & algorithm=="cv_glmnet"]
 new_dt <- fread("NSCH_batchtools.csv")
 
+meta_dt <- fread("meta.csv")
+tfac <- function(x)factor(x, c("all","same","other",""))
+results_dt <- new_dt[meta_dt, on="test.subset"][, let(
+  Train_subsets=tfac(train.subsets)
+)]
+full_sample_size <- results_dt[
+  n.train.groups==groups & learner_id=="classif.cv_glmnet"]
+full_metrics <- nc::capture_melt_single(
+  full_sample_size,
+  "classif[.]",
+  metric=nc::alevels(acc="accuracy_prop", auc="AUC"))
+full_stats <- dcast(
+  full_metrics,
+  Train_subsets + metric + test.subset + rows ~ .,
+  list(mean, sd, length)
+)[, test := test.subset]
+gg <- ggplot()+
+  ggtitle("Data set: NSCH_autism (2 similar subsets)")+
+  geom_blank(aes(
+    x, y),
+    data=data.table(x=Inf, y=tfac("")))+
+  geom_point(aes(
+    value_mean, Train_subsets),
+    data=full_stats)+
+  geom_text(aes(
+    value_mean, Train_subsets, label=sprintf(
+      "%.4f±%.4f", value_mean, value_sd)),
+    vjust=-0.5,
+    size=3,
+    data=full_stats)+
+  geom_segment(aes(
+    value_mean+value_sd, Train_subsets,
+    xend=value_mean-value_sd, yend=Train_subsets),
+    data=full_stats)+
+  scale_y_discrete(
+    "Train subsets",
+    drop=FALSE)+
+  scale_x_continuous(
+    "cv_glmnet performance on test subset (mean±SD over 10 folds in CV)")+
+  facet_grid(test+rows~metric, scales="free", labeller=label_both)
+png(
+  "figure-compare-paper-reproduce-figure4.png",
+  width=8, height=3, units="in", res=200)
+print(gg)
+dev.off()
+
 compare_dt <- rbind(
   orig_dt[, .(
     results="original",
