@@ -91,7 +91,9 @@ for(year.do in year.do.vec){
   }, by=variable]
   year.dt[, y := k2q35a]
   prop.NA <- colMeans(is.na(year.dt))
-  half.names <- setdiff(names(prop.NA)[prop.NA<0.1], c("y","k2q35a","survey_year","year"))
+  half.names <- setdiff(
+    names(prop.NA)[prop.NA<0.1],
+    c("y","k2q35a","survey_year","year"))
   some.col.names <- c("survey_year", "y", half.names)
   year.some.cols <- year.dt[, some.col.names, with=FALSE]
   keep <- apply(!is.na(year.some.cols), 1, all)
@@ -168,4 +170,8 @@ for(year.do in year.do.vec){
 common.names <- Reduce(intersect, sapply(out.dt.list, names))
 out.dt <- rbindlist(lapply(out.dt.list, function(DT)DT[, common.names,with=FALSE]))
 setnames(out.dt, gsub("'", "", gsub("[$]", "USD", gsub("[],:;+?()/<> =[-]", "_", common.names, perl=TRUE))))
-fwrite(out.dt, "data_Classif/NSCH_autism.csv")
+fwrite(out.dt, "data_Classif/NSCH_autism_new.csv")
+
+old.dt <- fread("data_Classif/NSCH_autism.csv")
+setdiff(names(old.dt),names(out.dt))
+dput(setdiff(names(out.dt),names(old.dt)))

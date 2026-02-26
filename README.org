@@ -98,7 +98,7 @@ For example, the results I computed are in [[file:results/2026-02-24/]]
 
 * Reproducing data generation
 
-[[file:data_Classif_NSCH_autism.R]] has code for downloading Stata files
+[[file:data_Classif_NSCH_autism_new.R]] has code for downloading Stata files
 from NSCH, and converting into a format for machine learning.
 
 When this code was originally run in Jan 2024, the files provided by
@@ -125,3 +125,12 @@ We see the raw number of rows is consistent, but there are more
 columns in the raw data.
 The numbers after processing are not equal, but they are reasonably similar.
 
+If we exclude three variables (sc_aian, sc_asian, sc_nhpi), as in [[file:data_Classif_NSCH_autism_new_reproduced.R]], we get consistent results.
+
+#+begin_src R
+    year data.type  nrow  ncol questions  %Autism %rowsNA  %colsNA
+1:  2019       raw 29433   448       448 2.961548     100 89.73214
+2:  2019 processed 18202   377       187 2.999670       0  0.00000
+3:  2020       raw 42777   447       447 2.975757     100 89.70917
+4:  2020 processed 27808   373       185 3.081847       0  0.00000  
+#+end_src
