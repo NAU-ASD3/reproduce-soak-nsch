@@ -48,7 +48,7 @@ gg <- ggplot()+
     data=all_dt)+
   geom_blank(aes(x,y),data=blank_dt)
 png(
-  "timings.png",
+  "figure-timings.png",
   width=8, height=5, units="in", res=200)
 print(gg)
 dev.off()

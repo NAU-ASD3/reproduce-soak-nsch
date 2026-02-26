@@ -1,5 +1,7 @@
 Code for reproducing SOAK paper results for NSCH data
 
+[[https://docs.google.com/presentation/d/1EVu7YMCO4tvK3RhkUp1dfFABspn410X9bz2DBznsO-g/edit?usp=sharing][Google slides summarizing results]].
+
 ** Context
 
 National Survey of Public Health (NSCH) data from 2019 and 2020 were
@@ -22,10 +24,56 @@ Figure 4 and 5 show results computed using these data.
 The original result CSV files used to compute Figures 4 and 5, and
 reproducibility instructions, are available in the [[https://github.com/tdhock/cv-same-other-paper?tab=readme-ov-file#reproducibility][GitHub repository associated with the paper]].
 
-This repo provides code for three different ways of reproducing these results.
+This repo provides code for three different ways of reproducing these
+results.  All involve first running [[file:NSCH.R]] to setup the mlr3
+Task, Learner, and SOAK Resampling instance.
 
-TODO
+*** Local and MPI
 
-** Slides
+These methods first run [[file:NSCH_proj.R]] to setup the mlr3resampling project.
+- [[file:NSCH_local.R]] is the simplest method (and slowest): it runs using your local computer (possibly in parallel).
+- [[file:NSCH_mpi.R]] requires a cluster with SLURM and MPI.
 
-[[https://docs.google.com/presentation/d/1EVu7YMCO4tvK3RhkUp1dfFABspn410X9bz2DBznsO-g/edit?usp=sharing][Google slides summarizing results]].
+*** batchtools
+
+[[file:NSCH_batchtools.R]] uses batchtools, so works with other kinds of clusters (not just SLURM).
+
+*** Copy CSV files to results sub-directory
+
+For example, I copied the CSV files I computed using these three methods to [[file:results/2026-02-24/]]
+
+*** Result figures
+
+- [[file:results/2026-02-24/figure-compare-paper.R]] makes several figures that compare the original and reproduced results.
+- [[file:results/2026-02-24/figure-compare-computation.R]] makes a figure to compare the results from the different computational methods.
+- [[file:results/2026-02-24/figure-timings.R]] makes a figure to compare the computation time of the different computational methods.
+
+** Reproducing data generation
+
+[[file:data_Classif_NSCH_autism.R]] has code for downloading Stata files
+from NSCH, and converting into a format for machine learning.
+
+When this code was originally run in Jan 2024, the files provided by
+NSCH were named like =nsch_2019_topical.dta= and gave the result below.
+#+begin_src R
+    year data.type  nrow  ncol questions  %Autism %rowsNA  %colsNA
+1:  2019       raw 29433   443       443 2.961548     100 90.06772
+2:  2019 processed 18202   377       187 2.999670       0  0.00000
+3:  2020       raw 42777   443       443 2.975757     100 90.06772
+4:  2020 processed 27808   373       185 3.081847       0  0.00000
+#+end_src
+
+Re-running the code on the new files named like
+=nsch_2019e_topical.dta= (e added after year) gave the result below.
+#+begin_src R
+    year data.type  nrow  ncol questions  %Autism %rowsNA  %colsNA
+1:  2019       raw 29433   448       448 2.961548     100 89.73214
+2:  2019 processed 18187   380       190 2.996646       0  0.00000
+3:  2020       raw 42777   447       447 2.975757     100 89.70917
+4:  2020 processed 27776   376       188 3.085397       0  0.00000
+#+end_src
+
+We see the raw number of rows is consistent, but there are more
+columns in the raw data.
+The numbers after processing are not equal, but they are reasonably similar.
+

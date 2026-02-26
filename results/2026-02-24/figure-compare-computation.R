@@ -62,7 +62,7 @@ gg <- ggplot()+
     "Area Under the Curve (AUC) for cv_glmnet predictions on test subset (mean±SD over 10 folds in CV)")+
   facet_grid(train~test, scales="free", labeller=label_both)
 png(
-  "figure.png",
+  "figure-compare-computation.png",
   width=8, height=4, units="in", res=200)
 print(gg)
 dev.off()

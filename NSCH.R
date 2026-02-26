@@ -14,6 +14,9 @@ for(task_id in "NSCH_autism"){
   if(!file.exists(data.csv)){
     unzip("data_Classif.zip", data.csv)
   }
+  if(!file.exists(data.csv)){
+    download.file("https://rcdata.nau.edu/genomic-ml/cv-same-other-paper/data_Classif/NSCH_autism.csv", data.csv)
+  }
   task.dt <- fread(
     data.csv,
     colClasses=list(factor="y"),
