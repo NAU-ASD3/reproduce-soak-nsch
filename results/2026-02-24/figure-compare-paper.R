@@ -22,7 +22,7 @@ compare_dt <- rbind(
   test=test.subset,
   train=train.subsets,
   AUC=classif.auc,
-  percent_error=(1-Accuracy)*100
+  Percent_error=(1-Accuracy)*100
 )][]
 
 ures <- sort(unique(compare_dt$results))
@@ -30,12 +30,20 @@ yfac <- function(x)factor(x, rev(c(
   #"",
   ures)))
 compare_dt[, Results := yfac(results)]
-measure.vars <- c("Accuracy","AUC")
+measure.vars <- c("Accuracy","AUC","Percent_error")
+
+res_dt <- compare_dt[results=="reproduced" & train.subsets!="other"]
+plist <- mlr3resampling::pvalue(res_dt, value.var="Percent_error")
+gg <- plot(plist)
+out.png <- "figure-compare-paper-reproduce-figure5.png"
+png(out.png, width=8, height=2.5, units="in", res=200)
+print(gg)
+dev.off()
 
 p_dt_list <- list()
 for(res in ures){
   res_dt <- compare_dt[results==res]
-  plist <- mlr3resampling::pvalue(res_dt, value.var="percent_error")
+  plist <- mlr3resampling::pvalue(res_dt, value.var="Percent_error")
   for(data_type in c("stats","pvalues")){
     p_dt_list[[data_type]][[res]] <- data.table(results=res, plist[[data_type]])
   }
