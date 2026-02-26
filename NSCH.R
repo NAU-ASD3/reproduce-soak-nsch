@@ -33,8 +33,13 @@ for(task_id in "NSCH_autism"){
     subset.col,
     "test.subset")
   fwrite(meta_dt, meta.csv)
-}  
+}
+
 scratch.dir <- "scratch"
+proj.dir <- file.path(scratch.dir, "proj")
+reg.dir <- file.path(scratch.dir, "registry")
+out.csv <- paste0(reg.dir, "_scores.csv")
+job.csv <- paste0(reg.dir, "_jobs.csv")
 dir.create(scratch.dir, showWarnings=FALSE)
 
 set.seed(1)
