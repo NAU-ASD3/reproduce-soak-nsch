@@ -34,6 +34,10 @@ all_dt <- dcast(
   unit_all_dt,
   cpus+host+pkg+learner_id+job.id+row ~ time,
   value.var=c("seconds","minutes","hours"))
+all_dt[, .(
+  cpu_hours=sum(hours_done-hours_started),
+  wall_minutes=max(minutes_done)
+), by=.(cpus,host,pkg)]
 
 blank_dt <- data.table(mpi_dt[1], x=0, y=21)
 gg <- ggplot()+

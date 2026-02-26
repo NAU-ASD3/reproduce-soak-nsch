@@ -38,6 +38,24 @@ These methods first run [[file:NSCH_proj.R]] to setup the mlr3resampling project
 
 [[file:NSCH_batchtools.R]] uses batchtools, so works with other kinds of clusters (not just SLURM).
 
+*** Expected time
+
+The figure below shows timings to re-compute the 60 train/test splits on various computers.
+
+[[file:results/2026-02-24/figure-timings.png]]
+
+On a fast 2025 super-computer (Alliance Canada rorqual)
+- on which all 60 jobs run in parallel, wall time ~5 minutes.
+- running in sequence on 1 CPU, wall time 2–3 hours.
+
+On a 2025 Ubuntu laptop
+- in parallel on 14 cores, wall time ~1 hour.
+- in sequence on 1 CPU, wall time ~11 hours.
+
+On a ~2020 Windows desktop,
+- in parallel on 6 cores, wall time ~90 minutes.
+- in sequence on 1 CPU, wall time 7–8 hours.
+
 *** Copy CSV files to results sub-directory
 
 For example, I copied the CSV files I computed using these three methods to [[file:results/2026-02-24/]]
