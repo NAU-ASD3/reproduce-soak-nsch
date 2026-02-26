@@ -57,7 +57,7 @@ For example, you can make a symlink by running the following commands
 #+begin_src shell-script
   cd /projects/thocking/reproduce-soak-nsch
   mkdir /scratch/thocking/scratch-soak-nsch
-  ln -s /scratch/thocking/scratch-soaf-nsch scratch
+  ln -s /scratch/thocking/scratch-soak-nsch scratch
 #+end_src
 
 On your laptop, you don’t need to create a scratch symlink (a scratch sub-directory will be created for you).
