@@ -10,19 +10,47 @@ new_dt <- fread("NSCH_batchtools.csv")
 compare_dt <- rbind(
   orig_dt[, .(
     results="original",
-    train=train.groups, test=test.group, test.fold,
-    AUC=classif.auc, Accuracy=1-classif.ce)],
+    task_id, algorithm,
+    train.subsets=train.groups, test.subset=test.group, test.fold,
+    classif.auc, Accuracy=1-classif.ce)],
   new_dt[, .(
     results="reproduced",
-    train=train.subsets, test=test.subset, test.fold,
-    AUC=classif.auc, Accuracy=classif.acc)])
+    task_id, algorithm,
+    train.subsets, test.subset, test.fold,
+    classif.auc, Accuracy=classif.acc)]
+)[, let(
+  test=test.subset,
+  train=train.subsets,
+  AUC=classif.auc,
+  percent_error=(1-Accuracy)*100
+)][]
 
-ucomp <- sort(unique(compare_dt$results))
+ures <- sort(unique(compare_dt$results))
 yfac <- function(x)factor(x, rev(c(
   #"",
-  ucomp)))
+  ures)))
 compare_dt[, Results := yfac(results)]
 measure.vars <- c("Accuracy","AUC")
+
+p_dt_list <- list()
+for(res in ures){
+  res_dt <- compare_dt[results==res]
+  plist <- mlr3resampling::pvalue(res_dt, value.var="percent_error")
+  for(data_type in c("stats","pvalues")){
+    p_dt_list[[data_type]][[res]] <- data.table(results=res, plist[[data_type]])
+  }
+}
+p_dts <- lapply(p_dt_list, rbindlist)
+gg <- mlr3resampling:::plot.pvalue(p_dts, text.size=4)+
+  facet_grid(
+    results ~ test.subset,
+    labeller=label_both,
+    scales="free")+
+  scale_x_continuous("Percent prediction error on test set (mean±SD, 10-fold CV)")
+out.png <- "figure-compare-paper-pvalues.png"
+png(out.png, width=8, height=4, units="in", res=200)
+print(gg)
+dev.off()
 
 compare_long <- melt(compare_dt, measure.vars=measure.vars)
 compare_stats_long <- dcast(
