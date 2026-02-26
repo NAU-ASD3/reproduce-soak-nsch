@@ -45,9 +45,16 @@ gg <- ggplot()+
   facet_grid(cpus+pkg+host~., labeller=label_both, scales="free")+
   scale_y_continuous(
     "process",
-    breaks=c(1,seq(10, 100, by=10)))+
+    breaks=function(lim){
+      m <- lim[2]
+      c(1,
+        if(m>20)seq(10, 100, by=10)
+        else if(m>10)seq(5, 100, by=5)
+        else seq(1,10))
+    })+
   scale_x_continuous(
-    "Minutes from start of computation (train + test cv_glmnet learner on NSCH_data)")+
+    "Minutes from start of computation (train + test cv_glmnet learner on NSCH_data)",
+    breaks=seq(0, 100, by=10))+
   geom_segment(aes(
     minutes_started, job.id,
     xend=minutes_done, yend=job.id),
@@ -66,7 +73,8 @@ dev.off()
 
 desktop_dt <- all_dt[grep("desktop", host)]
 gg <- ggplot()+
-  facet_grid(cpus+pkg+host~., labeller=label_both, scales="free")+
+  facet_grid(
+    cpus+pkg+host~., labeller=label_both, scales="free")+
   scale_y_continuous(
     "Train/test split",
     breaks=c(1,seq(10, 100, by=10)))+
