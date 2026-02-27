@@ -125,7 +125,7 @@ For example, I ran [[file:results/2026-02-24/figure-compare-paper.R]], and got t
 - [[file:results/2026-02-24/figure-compare-paper-pvalues.png]]
 - [[file:results/2026-02-24/figure-compare-paper-AUC.png]]
 - [[file:results/2026-02-24/figure-compare-paper-Accuracy.png]]
-- [[file:results/2026-02-24/figure-compare-paper-Percent_Error.png]]
+- [[file:results/2026-02-24/figure-compare-paper-Percent_error.png]]
 
 If you want, you can run these additional analyses:
 
