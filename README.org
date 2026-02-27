@@ -26,9 +26,17 @@ reproducibility instructions, are available in the [[https://github.com/tdhock/c
 
 This repo provides code for three different ways of reproducing these results.
 
-** Step 0 clone this repo
+** Step 0 install software, clone this repo
 
-On a cluster system, you typically want this in your project space.
+First install the most recent version of R. I used 4.5.2. Also install these packages:
+
+#+begin_src R
+  install.packages(c("data.table","mlr3resampling","mlr3learners","mlr3batchmark","glmnet","batchtools","ggplot2","nc"))
+#+end_src
+
+And install git so you can clone this repo (or just download and unpack [[https://github.com/NAU-ASD3/reproduce-soak-nsch/archive/refs/heads/main.zip][the zip file]]).
+
+On a cluster system, you typically want to store this repo in your project space.
 
 #+begin_src shell-script
   cd /projects/thocking

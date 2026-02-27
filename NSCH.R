@@ -1,21 +1,26 @@
 library(data.table)
 options(timeout=9999)
-if(!file.exists("data_Classif.zip")){
-  download.file("https://zenodo.org/records/18273949/files/SOAK_data_Classif.zip?download=1", "data_Classif.zip")
-}
 
 SOAK <- mlr3resampling::ResamplingSameOtherSizesCV$new()
 SOAK$param_set$values$folds <- 10
 task.list <- list()
 dir.create("data_meta", showWarnings = FALSE)
+dir.create("data_Classif", showWarnings = FALSE)
 for(task_id in "NSCH_autism"){
   data.csv <- sprintf("data_Classif/%s.csv", task_id)
   meta.csv <- sprintf("data_meta/%s.csv", task_id)
   if(!file.exists(data.csv)){
-    unzip("data_Classif.zip", data.csv)
+    download.file(
+      "https://rcdata.nau.edu/genomic-ml/cv-same-other-paper/data_Classif/NSCH_autism.csv",
+      data.csv)
   }
   if(!file.exists(data.csv)){
-    download.file("https://rcdata.nau.edu/genomic-ml/cv-same-other-paper/data_Classif/NSCH_autism.csv", data.csv)
+    if(!file.exists("data_Classif.zip")){
+      download.file(
+        "https://zenodo.org/records/18273949/files/SOAK_data_Classif.zip?download=1",
+        "data_Classif.zip")
+    }
+    unzip("data_Classif.zip", data.csv)
   }
   task.dt <- fread(
     data.csv,
