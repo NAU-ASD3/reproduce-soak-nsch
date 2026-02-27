@@ -1,3 +1,5 @@
+NSCH.csv <- Sys.glob("NSCH_*.csv")
+reproduced.csv <- NSCH.csv[1]
 library(data.table)
 library(ggplot2)
 if(!file.exists("data_Classif_batchmark_registry.csv")){
@@ -5,7 +7,7 @@ if(!file.exists("data_Classif_batchmark_registry.csv")){
 }
 orig_dt <- fread("data_Classif_batchmark_registry.csv")[
   task_id=="NSCH_autism" & algorithm=="cv_glmnet"]
-new_dt <- fread("NSCH_batchtools.csv")
+new_dt <- fread(reproduced.csv)[, algorithm := sub("classif.", "", learner_id)]
 
 meta_dt <- fread("meta.csv")
 tfac <- function(x)factor(x, c("all","same","other",""))

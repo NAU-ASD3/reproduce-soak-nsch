@@ -1,4 +1,11 @@
-result.dir <- file.path("results", "2026-02-24")
+source("NSCH.R")
+today <- strftime(Sys.time(), "%Y-%m-%d")
+result.dir <- file.path("results", today)
+dir.create(result.dir, showWarnings = FALSE, recursive = TRUE)
+
+R.scripts <- Sys.glob("results/2026-02-24/*R")
+file.copy(R.scripts, result.dir)
+
 file.copy(
   file.path("data_meta", "NSCH_autism.csv"),
   file.path(result.dir, "meta.csv"))

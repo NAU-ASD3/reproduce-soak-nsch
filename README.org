@@ -94,7 +94,7 @@ On a 2025 Ubuntu laptop
 - in parallel on 14 cores, wall time ~1 hour.
 - in sequence on 1 CPU, wall time ~11 hours.
 
-On a ~2020 Windows desktop,
+On a ~2018 Windows desktop (intel core i5 9th Gen),
 - in parallel on 6 cores, wall time ~90 minutes.
 - in sequence on 1 CPU, wall time 7–8 hours.
 
@@ -105,14 +105,32 @@ First, wait for the calculations to finish (5 minutes to 20 hours depending on y
 - For options 1 and 2, the main result file is =scratch/proj/results.csv=
 - For option 3, the results are saved under =scratch/registry=
 
-You can use [[file:results_copy.R]] to copy CSV files to a sub-directory of results.
+Then run [[file:results_copy.R]] to copy CSV files (and R analysis
+scripts) to a sub-directory of results (named using the current date).
+The reproduced results files are named =NSCH_*.csv= in your results
+sub-directory.
+
 For example, the results I computed are in [[file:results/2026-02-24/]]
 
 ** Step 4 Result figures
 
-- [[file:results/2026-02-24/figure-compare-paper.R]] makes several figures that compare the original and reproduced results.
-- [[file:results/2026-02-24/figure-compare-computation.R]] makes a figure to compare the results from the different computational methods.
-- [[file:results/2026-02-24/figure-timings.R]] makes a figure to compare the computation time of the different computational methods.
+Now start R in your results sub-directory and run =figure-compare-paper.R=
+which should make several figures that compare the original and
+reproduced results (using the first =NSCH_*.csv= file in your results
+directory).
+
+For example, I ran [[file:results/2026-02-24/figure-compare-paper.R]], and got these result figures.
+- [[file:results/2026-02-24/figure-compare-paper-reproduce-figure4.png]]
+- [[file:results/2026-02-24/figure-compare-paper-reproduce-figure5.png]]
+- [[file:results/2026-02-24/figure-compare-paper-pvalues.png]]
+- [[file:results/2026-02-24/figure-compare-paper-AUC.png]]
+- [[file:results/2026-02-24/figure-compare-paper-Accuracy.png]]
+- [[file:results/2026-02-24/figure-compare-paper-Percent_Error.png]]
+
+If you want, you can run these additional analyses:
+
+- [[file:results/2026-02-24/figure-compare-computation.R]] makes a [[file:results/2026-02-24/figure-compare-computation.png][figure]] to compare the results from the different computational methods.
+- [[file:results/2026-02-24/figure-timings.R]] makes a [[file:results/2026-02-24/figure-timings.png][figure]] to compare the computation time of the different computational methods.
 
 * Reproducing data generation
 
