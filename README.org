@@ -28,7 +28,8 @@ This repo provides code for three different ways of reproducing these results.
 
 ** Step 0 install software, clone this repo
 
-First install the most recent version of R. I used 4.5.2. Also install these packages:
+First install the most recently released version of R (it may work with older versions, but the most recently released version is your best bet, because all the packages are checked using this version).
+I used R-4.5.2. Also install these packages:
 
 #+begin_src R
   install.packages(c("data.table","mlr3resampling","mlr3learners","mlr3batchmark","glmnet","batchtools","ggplot2","nc"))
