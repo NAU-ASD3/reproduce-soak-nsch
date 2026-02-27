@@ -2,7 +2,7 @@ Code for reproducing SOAK paper results for NSCH data
 
 [[https://docs.google.com/presentation/d/1EVu7YMCO4tvK3RhkUp1dfFABspn410X9bz2DBznsO-g/edit?usp=sharing][Google slides summarizing results]].
 
-** Context
+* Context
 
 National Survey of Public Health (NSCH) data from 2019 and 2020 were
 used as one of the 20 data sets in the paper, [[https://onlinelibrary.wiley.com/doi/10.1002/sam.70055][Bodine, Thibault,
@@ -19,24 +19,66 @@ used as the output/response to predict, and the other columns were
 used as the inputs to the prediction function.
 Figure 4 and 5 show results computed using these data.
 
-** Reproducing
+* Reproducing machine learning prediction error/accuracy figures
 
 The original result CSV files used to compute Figures 4 and 5, and
 reproducibility instructions, are available in the [[https://github.com/tdhock/cv-same-other-paper?tab=readme-ov-file#reproducibility][GitHub repository associated with the paper]].
 
-This repo provides code for three different ways of reproducing these
-results.  All involve first running [[file:NSCH.R]] to setup the mlr3
-Task, Learner, and SOAK Resampling instance.
+This repo provides code for three different ways of reproducing these results.
+
+** Step 0 clone this repo
+
+On a cluster system, you typically want this in your project space.
+
+#+begin_src shell-script
+  cd /projects/thocking
+  git clone https://github.com/NAU-ASD3/reproduce-soak-nsch
+  cd reproduce-soak-nsch
+#+end_src
+
+On your laptop, typically under your home directory.
+
+#+begin_src shell-script
+  cd
+  git clone https://github.com/NAU-ASD3/reproduce-soak-nsch
+  cd reproduce-soak-nsch
+#+end_src
+
+** Step 1 create scratch link
+
+All scripts
+
+- first save data and result files under =scratch/=
+- and then copy result files under =results/=
+
+So on a cluster system, you should make sure scratch is a link to a directory under your scratch space.
+For example, you can make a symlink by running the following commands
+
+#+begin_src shell-script
+  cd /projects/thocking/reproduce-soak-nsch
+  mkdir /scratch/thocking/scratch-soak-nsch
+  ln -s /scratch/thocking/scratch-soak-nsch scratch
+#+end_src
+
+On your laptop, you don’t need to create a scratch symlink (a scratch sub-directory will be created for you).
+
+** Step 2 launch calculations
+
+There are three options implemented.
+Start R in this directory, and run the code in one of these files.
 
 *** Local and MPI
 
-These methods first run [[file:NSCH_proj.R]] to setup the mlr3resampling project.
-- [[file:NSCH_local.R]] is the simplest method (and slowest): it runs using your local computer (possibly in parallel).
-- [[file:NSCH_mpi.R]] requires a cluster with SLURM and MPI.
+- Option 1: [[file:NSCH_local.R]] is the simplest method (and slowest): it runs using your local computer (possibly in parallel).
+- Option 2: [[file:NSCH_mpi.R]] requires a cluster with SLURM and MPI.
+
+These methods both use [[file:NSCH_proj.R]] to setup the mlr3resampling project.
 
 *** batchtools
 
-[[file:NSCH_batchtools.R]] uses batchtools, so works with other kinds of clusters (not just SLURM).
+- Option 3: [[file:NSCH_batchtools.R]] uses batchtools, so works with other kinds of clusters (not just SLURM).
+
+All options use [[file:NSCH.R]] to setup the mlr3 Task, Learner, and SOAK Resampling instance.
 
 *** Expected time
 
@@ -56,19 +98,25 @@ On a ~2020 Windows desktop,
 - in parallel on 6 cores, wall time ~90 minutes.
 - in sequence on 1 CPU, wall time 7–8 hours.
 
-*** Copy CSV files to results sub-directory
+** Step 3 Wait and copy CSV files to results sub-directory
 
-For example, I copied the CSV files I computed using these three methods to [[file:results/2026-02-24/]]
+First, wait for the calculations to finish (5 minutes to 20 hours depending on your computer).
 
-*** Result figures
+- For options 1 and 2, the main result file is =scratch/proj/results.csv=
+- For option 3, the results are saved under =scratch/registry=
+
+You can use [[file:results_copy.R]] to copy CSV files to a sub-directory of results.
+For example, the results I computed are in [[file:results/2026-02-24/]]
+
+** Step 4 Result figures
 
 - [[file:results/2026-02-24/figure-compare-paper.R]] makes several figures that compare the original and reproduced results.
 - [[file:results/2026-02-24/figure-compare-computation.R]] makes a figure to compare the results from the different computational methods.
 - [[file:results/2026-02-24/figure-timings.R]] makes a figure to compare the computation time of the different computational methods.
 
-** Reproducing data generation
+* Reproducing data generation
 
-[[file:data_Classif_NSCH_autism.R]] has code for downloading Stata files
+[[file:data_Classif_NSCH_autism_new.R]] has code for downloading Stata files
 from NSCH, and converting into a format for machine learning.
 
 When this code was originally run in Jan 2024, the files provided by
@@ -95,3 +143,12 @@ We see the raw number of rows is consistent, but there are more
 columns in the raw data.
 The numbers after processing are not equal, but they are reasonably similar.
 
+If we exclude three variables (sc_aian, sc_asian, sc_nhpi), as in [[file:data_Classif_NSCH_autism_new_reproduced.R]], we get consistent results.
+
+#+begin_src R
+    year data.type  nrow  ncol questions  %Autism %rowsNA  %colsNA
+1:  2019       raw 29433   448       448 2.961548     100 89.73214
+2:  2019 processed 18202   377       187 2.999670       0  0.00000
+3:  2020       raw 42777   447       447 2.975757     100 89.70917
+4:  2020 processed 27808   373       185 3.081847       0  0.00000  
+#+end_src
