@@ -114,10 +114,9 @@ First, wait for the calculations to finish (5 minutes to 20 hours depending on y
 - For options 1 and 2, the main result file is =scratch/proj/results.csv=
 - For option 3, the results are saved under =scratch/registry=
 
-Then run [[file:results_copy.R]] to copy CSV files (and R analysis
-scripts) to a sub-directory of results (named using the current date).
-The reproduced results files are named =NSCH_*.csv= in your results
-sub-directory.
+Then copy CSV files (and R analysis scripts) to a sub-directory of results (named using the current date).
+The reproduced results files are named =NSCH_*.csv= in your results sub-directory.
+You can execute the relevant lines of [[file:results_copy.R]], or just do the copy yourself (cp or gui).
 
 For example, the results I computed are in [[file:results/2026-02-24/]]
 
