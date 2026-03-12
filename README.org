@@ -121,8 +121,8 @@ You can execute the relevant lines of [[file:results_copy.R]], or just do the co
 
 For example, 
 
-* the results @tdhock computed are in [[file:results/2026-02-24/]]
-* the results @naalu computed are in [[file:results/2026-03-06/]]
+- the results @tdhock computed are in [[file:results/2026-02-24/]]
+- the results @naalu computed are in [[file:results/2026-03-06/]]
 
 ** Step 4 Result figures
 
