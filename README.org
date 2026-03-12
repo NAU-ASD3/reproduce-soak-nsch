@@ -119,7 +119,10 @@ Then copy CSV files (and R analysis scripts) to a sub-directory of results (name
 The reproduced results files are named =NSCH_*.csv= in your results sub-directory.
 You can execute the relevant lines of [[file:results_copy.R]], or just do the copy yourself (cp or gui).
 
-For example, the results I computed are in [[file:results/2026-02-24/]]
+For example, 
+
+* the results @tdhock computed are in [[file:results/2026-02-24/]]
+* the results @naalu computed are in [[file:results/2026-03-06/]]
 
 ** Step 4 Result figures
 
